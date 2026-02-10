@@ -1,6 +1,8 @@
 package launcher;
 
 import display.Display;
+import scenes.DemoScene;
+import scenes.SceneManager;
 import settings.Settings;
 
 public class Launcher {
@@ -11,8 +13,12 @@ public class Launcher {
 
         display.createDisplay();
 
-        display.updateDisplay();
+        SceneManager sceneManager = new SceneManager();
+        sceneManager.setScene(new DemoScene(settings, display, sceneManager));
 
+        display.updateDisplay(sceneManager);
+
+        sceneManager.getCurrentScene().close();
         display.closeDisplay();
     }
 

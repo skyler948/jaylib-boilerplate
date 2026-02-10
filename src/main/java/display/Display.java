@@ -1,5 +1,6 @@
 package display;
 
+import scenes.SceneManager;
 import settings.Settings;
 
 import static com.raylib.Raylib.*;
@@ -54,16 +55,17 @@ public class Display {
                 .height(settings.getHeight() + (virtualRatio * 2));
     }
 
-    public void updateDisplay() {
+    public void updateDisplay(SceneManager sceneManager) {
         while (!WindowShouldClose()) {
-            // Tick
+            sceneManager.getCurrentScene().tick();
 
             BeginTextureMode(target);
                 ClearBackground(BLACK);
 
                 BeginMode2D(worldCamera);
-                    // Render
-                    // Ui
+                    sceneManager.getCurrentScene().render();
+                    sceneManager.getCurrentScene().ui();
+
                     DrawFPS(5, 5);
                 EndMode2D();
             EndTextureMode();
