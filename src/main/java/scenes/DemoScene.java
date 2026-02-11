@@ -15,7 +15,7 @@ public class DemoScene extends Scene {
 
     @Override
     public void init() {
-        texture = LoadTexture("resources/logo.png");
+        texture = game.getAssetManager().loadTexture("resources/logo.png");
     }
 
     @Override
@@ -41,7 +41,7 @@ public class DemoScene extends Scene {
 
     @Override
     public void close() {
-        UnloadTexture(texture);
+
     }
 
 }

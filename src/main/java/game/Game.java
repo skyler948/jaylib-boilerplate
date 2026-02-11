@@ -1,5 +1,6 @@
 package game;
 
+import assets.AssetManager;
 import display.Display;
 import scenes.DemoScene;
 import scenes.SceneManager;
@@ -12,11 +13,15 @@ public class Game {
 
     private SceneManager sceneManager;
 
+    private AssetManager assetManager;
+
     public Game() {
         settings = new Settings();
         display = new Display(settings);
 
         display.createDisplay();
+
+        assetManager = new AssetManager();
 
         sceneManager = new SceneManager();
         sceneManager.setScene(new DemoScene(this));
@@ -24,6 +29,7 @@ public class Game {
         display.updateDisplay(sceneManager);
 
         sceneManager.getCurrentScene().close();
+        assetManager.unloadAssets();
         display.closeDisplay();
     }
 
@@ -37,6 +43,10 @@ public class Game {
 
     public SceneManager getSceneManager() {
         return sceneManager;
+    }
+
+    public AssetManager getAssetManager() {
+        return assetManager;
     }
 
 }
