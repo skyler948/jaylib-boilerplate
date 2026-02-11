@@ -26,6 +26,10 @@ public class DemoScene extends Scene {
         if (IsKeyPressed(KEY_UP)) {
             game.getSceneManager().setScene(new DemoScene(game));
         }
+        if (IsKeyPressed(KEY_DOWN)) {
+            game.getSettings().setVsync(!game.getSettings().isVsync());
+            game.getSettings().writeSettings();
+        }
     }
 
     @Override

@@ -37,11 +37,8 @@ public class Display {
 
         InitAudioDevice();
 
-        if (settings.isVsync()) {
-            SetWindowState(FLAG_VSYNC_HINT);
-        } else {
-            SetTargetFPS(settings.getFps());
-        }
+        settings.setVsync(settings.isVsync());
+        settings.setMonitor(settings.getMonitor());
 
         target = LoadRenderTexture(INTERNAL_WIDTH, INTERNAL_HEIGHT);
 
