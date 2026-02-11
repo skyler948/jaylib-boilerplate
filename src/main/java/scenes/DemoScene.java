@@ -1,7 +1,6 @@
 package scenes;
 
-import display.Display;
-import settings.Settings;
+import game.Game;
 
 import static com.raylib.Raylib.*;
 import static com.raylib.Colors.*;
@@ -10,8 +9,8 @@ public class DemoScene extends Scene {
 
     private Texture texture;
 
-    public DemoScene(Settings settings, Display display, SceneManager sceneManager) {
-        super(settings, display, sceneManager);
+    public DemoScene(Game game) {
+        super(game);
     }
 
     @Override
@@ -25,7 +24,7 @@ public class DemoScene extends Scene {
             System.out.println("Yup, it works!");
         }
         if (IsKeyPressed(KEY_UP)) {
-            sceneManager.setScene(new DemoScene(settings, display, sceneManager));
+            game.getSceneManager().setScene(new DemoScene(game));
         }
     }
 

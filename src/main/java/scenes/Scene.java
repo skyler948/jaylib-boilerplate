@@ -1,7 +1,6 @@
 package scenes;
 
-import display.Display;
-import settings.Settings;
+import game.Game;
 
 public abstract class Scene {
 
@@ -9,14 +8,10 @@ public abstract class Scene {
 
     private final long id;
 
-    protected Settings settings;
-    protected Display display;
-    protected SceneManager sceneManager;
+    protected Game game;
 
-    public Scene(Settings settings, Display display, SceneManager sceneManager) {
-        this.settings = settings;
-        this.display = display;
-        this.sceneManager = sceneManager;
+    public Scene(Game game) {
+        this.game = game;
         this.id = currentId++;
     }
 
