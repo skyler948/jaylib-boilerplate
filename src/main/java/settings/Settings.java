@@ -1,5 +1,7 @@
 package settings;
 
+import game.Game;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -25,7 +27,10 @@ public class Settings {
     private boolean vsync;
     private boolean letterboxing;
 
-    public Settings() {
+    private Game game;
+
+    public Settings(Game game) {
+        this.game = game;
         rootPath = new File(ROOT);
         settingsFile = new File(SETTINGS_PATH);
 
@@ -61,7 +66,7 @@ public class Settings {
             writer.write("fps=240\n");
             writer.write("monitor=0\n");
             writer.write("vsync=false\n");
-            writer.write("letterboxing=false");
+            writer.write("letterboxing=true");
 
             writer.close();
         } catch (IOException e) {
@@ -186,6 +191,8 @@ public class Settings {
 
     public void setLetterboxing(boolean letterboxing) {
         this.letterboxing = letterboxing;
+
+        game.getDisplay().setDisplayDimensions();
     }
 
 }

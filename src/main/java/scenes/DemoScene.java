@@ -30,10 +30,15 @@ public class DemoScene extends Scene {
             game.getSettings().setVsync(!game.getSettings().isVsync());
             game.getSettings().writeSettings();
         }
+        if (IsKeyPressed(KEY_L)) { // Letterboxing will do seemingly nothing if display aspect ratio is 16:9
+            game.getSettings().setLetterboxing(!game.getSettings().isLetterboxing());
+            game.getSettings().writeSettings();
+        }
     }
 
     @Override
     public void render() {
+        DrawRectangle(0, 0, game.getDisplay().getInternalWidth(), game.getDisplay().getInternalHeight(), DARKGRAY);
         DrawTexture(texture, 100, 200, WHITE);
         DrawRectangle(300, 400, 100, 200, RED);
     }

@@ -16,7 +16,7 @@ public class Game {
     private AssetManager assetManager;
 
     public Game() {
-        settings = new Settings();
+        settings = new Settings(this);
         display = new Display(settings);
 
         display.createDisplay();
