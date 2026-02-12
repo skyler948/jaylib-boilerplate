@@ -9,13 +9,17 @@ public class DemoScene extends Scene {
 
     private Texture texture;
 
+    private Sound sound;
+
     public DemoScene(Game game) {
         super(game);
     }
 
     @Override
     public void init() {
-        texture = game.getAssetManager().loadTexture("resources/logo.png");
+        texture = game.getAssetManager().getTexture("logo");
+
+        sound = game.getAssetManager().getSound("coin");
     }
 
     @Override
@@ -33,6 +37,9 @@ public class DemoScene extends Scene {
         if (IsKeyPressed(KEY_L)) { // Letterboxing will do seemingly nothing if display aspect ratio is 16:9
             game.getSettings().setLetterboxing(!game.getSettings().isLetterboxing());
             game.getSettings().writeSettings();
+        }
+        if (IsKeyPressed(KEY_C)) {
+            PlaySound(sound);
         }
     }
 

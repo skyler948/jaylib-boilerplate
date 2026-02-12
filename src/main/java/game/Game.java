@@ -23,6 +23,8 @@ public class Game {
 
         assetManager = new AssetManager();
 
+        loadAssets();
+
         sceneManager = new SceneManager();
         sceneManager.setScene(new DemoScene(this));
 
@@ -31,6 +33,13 @@ public class Game {
         sceneManager.getCurrentScene().close();
         assetManager.unloadAssets();
         display.closeDisplay();
+    }
+
+    private void loadAssets() {
+        assetManager.loadTexture("logo");
+        assetManager.loadMusic("sneaky_snitch");
+        assetManager.loadSound("coin");
+        assetManager.loadFont("arial");
     }
 
     public Settings getSettings() {
