@@ -26,6 +26,7 @@ public class Settings {
     private byte monitor;
     private boolean vsync;
     private boolean letterboxing;
+    private DisplayMode displayMode;
 
     private Game game;
 
@@ -66,7 +67,8 @@ public class Settings {
             writer.write("fps=240\n");
             writer.write("monitor=0\n");
             writer.write("vsync=false\n");
-            writer.write("letterboxing=true");
+            writer.write("letterboxing=true\n");
+            writer.write("display_mode=WINDOWED");
 
             writer.close();
         } catch (IOException e) {
@@ -83,7 +85,8 @@ public class Settings {
             writer.write("fps=" + fps + "\n");
             writer.write("monitor=" + monitor + "\n");
             writer.write("vsync=" + vsync + "\n");
-            writer.write("letterboxing=" + letterboxing);
+            writer.write("letterboxing=" + letterboxing + "\n");
+            writer.write("display_mode=" + displayMode);
 
             writer.close();
         } catch (IOException e) {
@@ -122,6 +125,9 @@ public class Settings {
                         break;
                     case "letterboxing":
                         letterboxing = Boolean.parseBoolean(data[1]);
+                        break;
+                    case "display_mode":
+                        displayMode = DisplayMode.valueOf(data[1]);
                         break;
                 }
             }
@@ -192,7 +198,19 @@ public class Settings {
     public void setLetterboxing(boolean letterboxing) {
         this.letterboxing = letterboxing;
 
-        game.getDisplay().setDisplayDimensions();
+        game.getDisplay().setRenderTextureDimensions();
+    }
+
+    public DisplayMode getDisplayMode() {
+        return displayMode;
+    }
+
+    public void setDisplayMode(DisplayMode displayMode) {
+        this.displayMode = displayMode;
+    }
+
+    public boolean isFullscreen() {
+        return !displayMode.equals(DisplayMode.WINDOWED);
     }
 
 }

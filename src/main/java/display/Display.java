@@ -1,7 +1,11 @@
 package display;
 
 import scenes.SceneManager;
+import settings.DisplayMode;
 import settings.Settings;
+
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 
 import static com.raylib.Raylib.*;
 import static com.raylib.Colors.*;
@@ -10,6 +14,10 @@ public class Display {
 
     private final int INTERNAL_WIDTH = 1280;
     private final int INTERNAL_HEIGHT = 720;
+
+    private int width, height;
+
+    private GraphicsDevice gd;
 
     private Settings settings;
 
@@ -27,9 +35,7 @@ public class Display {
     public Display(Settings settings) {
         this.settings = settings;
 
-        virtualRatio = settings.getWidth() / (float) INTERNAL_WIDTH;
-        internalRatio = (float) INTERNAL_WIDTH / INTERNAL_HEIGHT;
-        displayRatio = (float) settings.getWidth() / settings.getHeight();
+        gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
         worldCamera = new Camera2D()
                 .zoom(1.0f);
@@ -38,7 +44,9 @@ public class Display {
     }
 
     public void createDisplay() {
-        InitWindow(settings.getWidth(), settings.getHeight(), "Jaylib Boilerplate");
+        setDisplayDimensions();
+
+        InitWindow(width, height, "Jaylib Boilerplate");
 
         InitAudioDevice();
 
@@ -47,10 +55,35 @@ public class Display {
 
         target = LoadRenderTexture(INTERNAL_WIDTH, INTERNAL_HEIGHT);
 
-        setDisplayDimensions();
+        setRenderTextureDimensions();
     }
 
     public void setDisplayDimensions() {
+        ClearWindowState(FLAG_FULLSCREEN_MODE | FLAG_WINDOW_TOPMOST | FLAG_WINDOW_UNDECORATED);
+
+        if (settings.getDisplayMode().equals(DisplayMode.WINDOWED)) {
+            width = settings.getWidth();
+            height = settings.getHeight();
+        } else {
+            width = gd.getDisplayMode().getWidth();
+            height = gd.getDisplayMode().getHeight();
+        }
+
+        virtualRatio = width / (float) INTERNAL_WIDTH;
+        internalRatio = (float) INTERNAL_WIDTH / INTERNAL_HEIGHT;
+        displayRatio = (float) width / height;
+
+        switch (settings.getDisplayMode()) {
+            case FULLSCREEN:
+                SetConfigFlags(FLAG_FULLSCREEN_MODE);
+                break;
+            case BORDERLESS:
+                SetConfigFlags(FLAG_WINDOW_TOPMOST | FLAG_WINDOW_UNDECORATED);
+                break;
+        }
+    }
+
+    public void setRenderTextureDimensions() {
         origin = new Vector2();
 
         sourceRec = new Rectangle()
@@ -61,27 +94,27 @@ public class Display {
         if (!settings.isLetterboxing() || displayRatio == internalRatio) {
             destRec = new Rectangle()
                     .x(-virtualRatio).y(-virtualRatio)
-                    .width(settings.getWidth() + (virtualRatio * 2))
-                    .height(settings.getHeight() + (virtualRatio * 2));
+                    .width(width + (virtualRatio * 2))
+                    .height(height + (virtualRatio * 2));
         } else {
             if (displayRatio < internalRatio) {
-                long letterboxHeight = ((long) settings.getWidth() * INTERNAL_HEIGHT) / INTERNAL_WIDTH;
+                long letterboxHeight = ((long) width * INTERNAL_HEIGHT) / INTERNAL_WIDTH;
 
                 destRec = new Rectangle()
                         .x(-virtualRatio).y(-virtualRatio)
-                        .width(settings.getWidth() + (virtualRatio * 2))
+                        .width(width + (virtualRatio * 2))
                         .height(letterboxHeight + (virtualRatio * 2));
 
-                origin.y((letterboxHeight / 2.0f) - (settings.getHeight() / 2.0f));
+                origin.y((letterboxHeight / 2.0f) - (height / 2.0f));
             } else if (displayRatio > internalRatio) {
-                long letterboxWidth = ((long) INTERNAL_WIDTH * settings.getHeight()) / INTERNAL_HEIGHT;
+                long letterboxWidth = ((long) INTERNAL_WIDTH * height) / INTERNAL_HEIGHT;
 
                 destRec = new Rectangle()
                         .x(-virtualRatio).y(-virtualRatio)
                         .width(letterboxWidth + (virtualRatio * 2))
-                        .height(settings.getHeight() + (virtualRatio * 2));
+                        .height(height + (virtualRatio * 2));
 
-                origin.x((letterboxWidth / 2.0f) - (settings.getWidth() / 2.0f));
+                origin.x((letterboxWidth / 2.0f) - (width / 2.0f));
             }
         }
     }
@@ -89,6 +122,19 @@ public class Display {
     public void updateDisplay(SceneManager sceneManager) {
         while (!WindowShouldClose()) {
             sceneManager.getCurrentScene().tick();
+
+            if (IsKeyPressed(KEY_F11)) {
+                if (settings.getDisplayMode().equals(DisplayMode.WINDOWED)) {
+                    settings.setDisplayMode(DisplayMode.FULLSCREEN);
+                } else {
+                    settings.setDisplayMode(DisplayMode.WINDOWED);
+                }
+
+                setDisplayDimensions();
+                setRenderTextureDimensions();
+                SetWindowSize(width, height);
+                setDisplayDimensions();
+            }
 
             BeginTextureMode(target);
                 ClearBackground(BLACK);
@@ -129,6 +175,14 @@ public class Display {
 
     public int getInternalHeight() {
         return INTERNAL_HEIGHT;
+    }
+
+    public int getCurrentWidth() {
+        return width;
+    }
+
+    public int getCurrentHeight() {
+        return height;
     }
 
 }
