@@ -1,6 +1,7 @@
 package scenes;
 
 import game.Game;
+import time.Timer;
 
 import static com.raylib.Raylib.*;
 import static com.raylib.Colors.*;
@@ -11,6 +12,8 @@ public class DemoScene extends Scene {
 
     private Sound sound;
 
+    private Timer timer;
+
     public DemoScene(Game game) {
         super(game);
     }
@@ -20,6 +23,8 @@ public class DemoScene extends Scene {
         texture = game.getAssetManager().getTexture("logo");
 
         sound = game.getAssetManager().getSound("coin");
+
+        timer = new Timer(5);
     }
 
     @Override
@@ -41,6 +46,10 @@ public class DemoScene extends Scene {
         if (IsKeyPressed(KEY_C)) {
             PlaySound(sound);
         }
+        timer.start();
+        if (timer.isDone()) {
+            System.out.println("Done!");
+        }
     }
 
     @Override
@@ -52,6 +61,7 @@ public class DemoScene extends Scene {
 
     @Override
     public void ui() {
+        DrawText(String.format("Timer: %.2fs", timer.getElapsed()), 200, 100, 20, WHITE);
         DrawText("Scene ID: " + getId(), 5, 25, 20, WHITE);
     }
 
