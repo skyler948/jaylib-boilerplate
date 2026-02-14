@@ -27,6 +27,8 @@ public class Settings {
     private boolean vsync;
     private boolean letterboxing;
     private DisplayMode displayMode;
+    private float masterVolume;
+    private float musicVolume, soundVolume;
 
     private Game game;
 
@@ -68,7 +70,10 @@ public class Settings {
             writer.write("monitor=0\n");
             writer.write("vsync=false\n");
             writer.write("letterboxing=true\n");
-            writer.write("display_mode=WINDOWED");
+            writer.write("display_mode=WINDOWED\n");
+            writer.write("master_volume=1.0f\n");
+            writer.write("music_volume=1.0f\n");
+            writer.write("sfx_volume=1.0f");
 
             writer.close();
         } catch (IOException e) {
@@ -86,7 +91,10 @@ public class Settings {
             writer.write("monitor=" + monitor + "\n");
             writer.write("vsync=" + vsync + "\n");
             writer.write("letterboxing=" + letterboxing + "\n");
-            writer.write("display_mode=" + displayMode);
+            writer.write("display_mode=" + displayMode + "\n");
+            writer.write("master_volume=" + masterVolume + "\n");
+            writer.write("music_volume=" + musicVolume + "\n");
+            writer.write("sfx_volume=" + soundVolume);
 
             writer.close();
         } catch (IOException e) {
@@ -128,6 +136,15 @@ public class Settings {
                         break;
                     case "display_mode":
                         displayMode = DisplayMode.valueOf(data[1]);
+                        break;
+                    case "master_volume":
+                        masterVolume = Float.parseFloat(data[1]);
+                        break;
+                    case "music_volume":
+                        musicVolume = Float.parseFloat(data[1]);
+                        break;
+                    case "sfx_volume":
+                        soundVolume = Float.parseFloat(data[1]);
                         break;
                 }
             }
@@ -213,4 +230,37 @@ public class Settings {
         return !displayMode.equals(DisplayMode.WINDOWED);
     }
 
+    public float getMasterVolume() {
+        return masterVolume;
+    }
+
+    public void setMasterVolume(float masterVolume) {
+        this.masterVolume = masterVolume;
+
+        SetMasterVolume(masterVolume);
+    }
+
+    public float getMusicVolume() {
+        return musicVolume;
+    }
+
+    public void setMusicVolume(float musicVolume) {
+        this.musicVolume = musicVolume;
+
+        for (Music music : game.getAssetManager().getMusic().values()) {
+            SetMusicVolume(music, musicVolume);
+        }
+    }
+
+    public float getSoundVolume() {
+        return soundVolume;
+    }
+
+    public void setSoundVolume(float soundVolume) {
+        this.soundVolume = soundVolume;
+
+        for (Sound sound : game.getAssetManager().getSounds().values()) {
+            SetSoundVolume(sound, soundVolume);
+        }
+    }
 }

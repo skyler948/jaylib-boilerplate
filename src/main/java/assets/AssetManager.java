@@ -141,4 +141,12 @@ public class AssetManager {
         unloadFonts();
     }
 
+    public HashMap<String, Sound> getSounds() {
+        return sounds;
+    }
+
+    public HashMap<String, Music> getMusic() {
+        return music;
+    }
+
 }

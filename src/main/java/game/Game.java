@@ -28,6 +28,10 @@ public class Game {
         sceneManager = new SceneManager();
         sceneManager.setScene(new DemoScene(this));
 
+        settings.setMasterVolume(settings.getMasterVolume());
+        settings.setMusicVolume(settings.getMusicVolume());
+        settings.setSoundVolume(settings.getSoundVolume());
+
         display.updateDisplay(sceneManager);
 
         sceneManager.getCurrentScene().close();
