@@ -109,10 +109,20 @@ public class Settings {
             Scanner scanner = new Scanner(settingsFile);
 
             while (scanner.hasNextLine()) {
-                String[] data = scanner.nextLine().split("=");
+                String[] data = new String[2];
+                String[] temp = scanner.nextLine().split("=");
 
-                data[0] = data[0].trim().toLowerCase(Locale.ROOT);
-                data[1] = data[1].trim();
+                if (temp.length == 0) {
+                    continue;
+                }
+
+                if (temp.length == 1) {
+                    data[0] = temp[0].trim().toLowerCase(Locale.ROOT);
+                    data[1] = "";
+                } else {
+                    data[0] = temp[0].trim().toLowerCase(Locale.ROOT);
+                    data[1] = temp[1].trim();
+                }
 
                 switch (data[0]) {
                     case "width":
@@ -135,7 +145,11 @@ public class Settings {
                         letterboxing = Boolean.parseBoolean(data[1]);
                         break;
                     case "display_mode":
-                        displayMode = DisplayMode.valueOf(data[1]);
+                        try {
+                            displayMode = DisplayMode.valueOf(data[1]);
+                        } catch (IllegalArgumentException e) {
+                            displayMode = DisplayMode.WINDOWED;
+                        }
                         break;
                     case "master_volume":
                         masterVolume = Float.parseFloat(data[1]);
